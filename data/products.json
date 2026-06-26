@@ -1,0 +1,57 @@
+[
+  {
+    "id": "1",
+    "title": "Figura Goku Super Saiyan Blue",
+    "description": "Figura de colección de Son Goku en su forma Super Saiyan Blue. Alta calidad, 25cm de altura.",
+    "code": "FIG-001",
+    "price": 8500,
+    "status": true,
+    "stock": 10,
+    "category": "figura",
+    "thumbnails": ["https://placehold.co/400x400/1a1a2e/e63946?text=Goku+SSB"]
+  },
+  {
+    "id": "2",
+    "title": "Manga Demon Slayer Vol. 1",
+    "description": "Primer volumen del manga Kimetsu no Yaiba (Demon Slayer). En español, editorial Panini.",
+    "code": "MNG-001",
+    "price": 1200,
+    "status": true,
+    "stock": 25,
+    "category": "manga",
+    "thumbnails": ["https://placehold.co/400x400/1a1a2e/e63946?text=Demon+Slayer"]
+  },
+  {
+    "id": "3",
+    "title": "Poster Attack on Titan",
+    "description": "Poster oficial de Shingeki no Kyojin, tamaño A2, papel de alta calidad.",
+    "code": "PST-001",
+    "price": 900,
+    "status": true,
+    "stock": 50,
+    "category": "poster",
+    "thumbnails": ["https://placehold.co/400x400/1a1a2e/e63946?text=AoT+Poster"]
+  },
+  {
+    "id": "4",
+    "title": "Llavero Totoro",
+    "description": "Llavero metálico de Totoro del Studio Ghibli. Muy resistente y detallado.",
+    "code": "LLV-001",
+    "price": 450,
+    "status": true,
+    "stock": 100,
+    "category": "llavero",
+    "thumbnails": ["https://placehold.co/400x400/1a1a2e/e63946?text=Totoro+Key"]
+  },
+  {
+    "id": "5",
+    "title": "Peluche Pikachu 30cm",
+    "description": "Peluche oficial de Pikachu, 30cm, material suave y lavable.",
+    "code": "PLU-001",
+    "price": 2800,
+    "status": true,
+    "stock": 15,
+    "category": "peluche",
+    "thumbnails": ["https://placehold.co/400x400/1a1a2e/e63946?text=Pikachu"]
+  }
+]

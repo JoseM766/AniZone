@@ -1,0 +1,22 @@
+{
+  "name": "anizone",
+  "version": "1.0.0",
+  "description": "AniZone - E-commerce de Anime y Manga",
+  "main": "src/app.js",
+  "type": "module",
+  "scripts": {
+    "start": "node src/app.js",
+    "dev": "nodemon src/app.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "mongoose": "^7.6.3",
+    "mongoose-paginate-v2": "^1.7.4",
+    "socket.io": "^4.6.1",
+    "express-handlebars": "^7.1.2",
+    "dotenv": "^16.3.1"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1"
+  }
+}

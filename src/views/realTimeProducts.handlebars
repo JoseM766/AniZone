@@ -1,0 +1,145 @@
+<div class="page-header">
+  <h1>⚡ Admin en Tiempo Real</h1>
+  <p>Los cambios se reflejan automáticamente via WebSockets</p>
+  <div class="ws-status">
+    <span id="wsStatus" class="ws-disconnected">● Conectando...</span>
+  </div>
+</div>
+
+<div class="admin-layout">
+  <!-- Formulario para agregar producto -->
+  <div class="admin-form-card">
+    <h2>➕ Nuevo Producto</h2>
+    <div class="form-group">
+      <label>Título *</label>
+      <input type="text" id="title" placeholder="Ej: Figura Son Goku Super Saiyan" class="input" />
+    </div>
+    <div class="form-group">
+      <label>Descripción *</label>
+      <textarea id="description" placeholder="Descripción del producto..." class="input"></textarea>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Código *</label>
+        <input type="text" id="code" placeholder="Ej: FIG-001" class="input" />
+      </div>
+      <div class="form-group">
+        <label>Precio *</label>
+        <input type="number" id="price" placeholder="0.00" class="input" />
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Stock *</label>
+        <input type="number" id="stock" placeholder="0" class="input" />
+      </div>
+      <div class="form-group">
+        <label>Categoría *</label>
+        <select id="category" class="input">
+          <option value="">Seleccionar...</option>
+          <option value="figura">Figura</option>
+          <option value="manga">Manga</option>
+          <option value="poster">Poster</option>
+          <option value="llavero">Llavero</option>
+          <option value="peluche">Peluche</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Thumbnail URL</label>
+      <input type="text" id="thumbnail" placeholder="https://..." class="input" />
+    </div>
+    <button onclick="addProduct()" class="btn btn-primary btn-lg">🚀 Agregar producto</button>
+    <p id="formMsg" class="cart-msg"></p>
+  </div>
+
+  <!-- Lista en tiempo real -->
+  <div class="realtime-list">
+    <h2>📦 Productos <span class="ws-badge">LIVE</span></h2>
+    <div id="productsList" class="rt-products"></div>
+  </div>
+</div>
+
+<script src="/socket.io/socket.io.js"></script>
+<script>
+  const socket = io();
+  const statusEl = document.getElementById('wsStatus');
+
+  socket.on('connect', () => {
+    statusEl.textContent = '● Conectado en tiempo real';
+    statusEl.className = 'ws-connected';
+    socket.emit('getProducts');
+  });
+
+  socket.on('disconnect', () => {
+    statusEl.textContent = '● Desconectado';
+    statusEl.className = 'ws-disconnected';
+  });
+
+  socket.on('productsList', (products) => {
+    const container = document.getElementById('productsList');
+    if (!products.length) {
+      container.innerHTML = '<p class="empty-rt">No hay productos aún.</p>';
+      return;
+    }
+    container.innerHTML = products.map(p => `
+      <div class="rt-product-item">
+        <div>
+          <strong>${p.title}</strong>
+          <span class="badge" style="margin-left:8px">${p.category}</span>
+          <p style="margin:4px 0;color:#888;font-size:.9rem">${p.description}</p>
+          <p><strong>$${p.price}</strong> — Stock: ${p.stock}</p>
+        </div>
+        <button onclick="deleteProduct('${p._id}')" class="btn btn-danger btn-sm">🗑️</button>
+      </div>
+    `).join('');
+  });
+
+  socket.on('serverError', (e) => {
+    document.getElementById('formMsg').textContent = '❌ ' + e.message;
+    document.getElementById('formMsg').className = 'cart-msg error';
+  });
+
+  function addProduct() {
+    const msg = document.getElementById('formMsg');
+
+    const title = document.getElementById('title').value.trim();
+    const description = document.getElementById('description').value.trim();
+    const code = document.getElementById('code').value.trim();
+    const price = parseFloat(document.getElementById('price').value);
+    const stock = parseInt(document.getElementById('stock').value);
+    const category = document.getElementById('category').value;
+    const thumbnailVal = document.getElementById('thumbnail').value.trim();
+
+    if (!title || !description || !code || !price || !stock || !category) {
+      msg.textContent = '⚠️ Completá todos los campos obligatorios';
+      msg.className = 'cart-msg error';
+      return;
+    }
+
+    const product = {
+      title,
+      description,
+      code,
+      price,
+      stock,
+      category,
+      thumbnails: thumbnailVal ? [thumbnailVal] : [],
+      status: true,
+    };
+
+    socket.emit('newProduct', product);
+    msg.textContent = '✅ Producto enviado, actualizando...';
+    msg.className = 'cart-msg success';
+
+    // Limpiar form
+    ['title','description','code','price','stock','thumbnail'].forEach(id => document.getElementById(id).value = '');
+    document.getElementById('category').value = '';
+  }
+
+  function deleteProduct(pid) {
+    if (confirm('¿Eliminar este producto?')) {
+      socket.emit('deleteProduct', pid);
+    }
+  }
+</script>

@@ -1,0 +1,92 @@
+<div class="detail-container">
+  <a href="/products" class="btn btn-outline back-btn">← Volver al catálogo</a>
+
+  <div class="detail-card">
+    <div class="detail-thumb">
+      {{#if product.thumbnails.[0]}}
+        <img src="{{product.thumbnails.[0]}}" alt="{{product.title}}" />
+      {{else}}
+        <div class="no-thumb large">🎌</div>
+      {{/if}}
+    </div>
+
+    <div class="detail-info">
+      <span class="badge badge-lg">{{product.category}}</span>
+      <h1>{{product.title}}</h1>
+      <p class="description">{{product.description}}</p>
+
+      <div class="meta">
+        <div class="meta-item">
+          <span class="meta-label">Código</span>
+          <span>{{product.code}}</span>
+        </div>
+        <div class="meta-item">
+          <span class="meta-label">Stock disponible</span>
+          <span>{{product.stock}} unidades</span>
+        </div>
+        <div class="meta-item">
+          <span class="meta-label">Estado</span>
+          <span>{{#if product.status}}✅ Disponible{{else}}❌ No disponible{{/if}}</span>
+        </div>
+      </div>
+
+      <p class="detail-price">${{product.price}}</p>
+
+      <div class="add-to-cart-section">
+        <button onclick="addToCart('{{product._id}}')" class="btn btn-primary btn-lg">
+          🛒 Agregar al carrito
+        </button>
+        <p id="cartMessage" class="cart-msg"></p>
+        <div id="cartLinkContainer" style="display:none; margin-top:.5rem;">
+          <a id="cartLink" href="#" class="btn btn-outline">👀 Ver mi carrito</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Recuperar carrito guardado del localStorage o crear uno nuevo
+  async function getOrCreateCart() {
+    const savedCartId = localStorage.getItem('anizone_cart_id');
+    if (savedCartId) return savedCartId;
+
+    // Si no hay carrito guardado, crear uno nuevo
+    const res = await fetch('/api/carts', { method: 'POST' });
+    const data = await res.json();
+    const cartId = data.payload._id;
+    localStorage.setItem('anizone_cart_id', cartId);
+    return cartId;
+  }
+
+  async function addToCart(productId) {
+    const msg = document.getElementById('cartMessage');
+    const cartLinkContainer = document.getElementById('cartLinkContainer');
+    const cartLink = document.getElementById('cartLink');
+
+    try {
+      msg.textContent = '⏳ Agregando...';
+      msg.className = 'cart-msg';
+
+      const cartId = await getOrCreateCart();
+
+      const res = await fetch(`/api/carts/${cartId}/products/${productId}`, {
+        method: 'POST'
+      });
+      const data = await res.json();
+
+      if (data.status === 'success') {
+        msg.textContent = '✅ Producto agregado al carrito!';
+        msg.className = 'cart-msg success';
+        cartLink.href = `/carts/${cartId}`;
+        cartLinkContainer.style.display = 'block';
+      } else {
+        msg.textContent = `❌ Error: ${data.error}`;
+        msg.className = 'cart-msg error';
+      }
+    } catch (err) {
+      msg.textContent = '❌ Error de conexión';
+      msg.className = 'cart-msg error';
+    }
+  }
+</script>

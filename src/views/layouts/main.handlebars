@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>{{title}}</title>
+  <link rel="stylesheet" href="/css/style.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+  <header class="navbar">
+    <div class="navbar-inner">
+      <a href="/products" class="logo">
+      <img src="/img/logo.png" alt="AniZone" class="logo-img" />
+      </a>
+      <nav>
+        <a href="/products">Catálogo</a>
+        <a href="/realtimeproducts">⚡ Admin</a>
+        <a href="#" onclick="goToCart(event)" class="cart-nav-btn">
+          🛒 <span id="cartCount" class="cart-count">0</span>
+        </a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="main-content">
+    {{{body}}}
+  </main>
+
+  <footer class="footer">
+    <p>🎌 AniZone &copy; 2024 — Tu tienda de Anime & Manga</p>
+  </footer>
+
+  <script>
+    function goToCart(e) {
+      e.preventDefault();
+      const cartId = localStorage.getItem('anizone_cart_id');
+      if (cartId) {
+        window.location.href = '/carts/' + cartId;
+      } else {
+        alert('Tu carrito está vacío. ¡Agregá productos primero!');
+      }
+    }
+
+    async function updateCartCount() {
+      const cartId = localStorage.getItem('anizone_cart_id');
+      if (!cartId) return;
+      try {
+        const res = await fetch('/api/carts/' + cartId);
+        const data = await res.json();
+        if (data.status === 'success') {
+          const total = data.payload.products.reduce((acc, item) => acc + item.quantity, 0);
+          document.getElementById('cartCount').textContent = total;
+          if (total > 0) document.getElementById('cartCount').classList.add('has-items');
+        }
+      } catch {}
+    }
+
+    updateCartCount();
+  </script>
+</body>
+</html>

@@ -1,0 +1,63 @@
+<div class="page-header">
+  <h1>🛒 Catálogo AniZone</h1>
+  <p>Encuentra tus productos de anime y manga favoritos</p>
+</div>
+
+<!-- Filtros -->
+<div class="filters">
+  <form action="/products" method="GET" class="filter-form">
+    <select name="query">
+      <option value="">Todas las categorías</option>
+      <option value="figura" {{#if (eq query "figura")}}selected{{/if}}>Figuras</option>
+      <option value="manga" {{#if (eq query "manga")}}selected{{/if}}>Mangas</option>
+      <option value="poster" {{#if (eq query "poster")}}selected{{/if}}>Posters</option>
+      <option value="llavero" {{#if (eq query "llavero")}}selected{{/if}}>Llaveros</option>
+      <option value="peluche" {{#if (eq query "peluche")}}selected{{/if}}>Peluches</option>
+    </select>
+    <select name="sort">
+      <option value="">Sin orden</option>
+      <option value="asc" {{#if (eq sort "asc")}}selected{{/if}}>Precio: menor a mayor</option>
+      <option value="desc" {{#if (eq sort "desc")}}selected{{/if}}>Precio: mayor a menor</option>
+    </select>
+    <button type="submit" class="btn btn-primary">Filtrar</button>
+  </form>
+</div>
+
+<!-- Grilla de productos -->
+<div class="products-grid">
+  {{#each products}}
+  <div class="product-card">
+    <div class="product-thumb">
+      {{#if this.thumbnails.[0]}}
+        <img src="{{this.thumbnails.[0]}}" alt="{{this.title}}" />
+      {{else}}
+        <div class="no-thumb">🎌</div>
+      {{/if}}
+    </div>
+    <div class="product-info">
+      <span class="badge">{{this.category}}</span>
+      <h3>{{this.title}}</h3>
+      <p class="price">${{this.price}}</p>
+      <p class="stock">Stock: {{this.stock}}</p>
+      <div class="card-actions">
+        <a href="/products/{{this._id}}" class="btn btn-outline">Ver detalle</a>
+      </div>
+    </div>
+  </div>
+  {{else}}
+  <div class="empty-state">
+    <p>😢 No se encontraron productos</p>
+  </div>
+  {{/each}}
+</div>
+
+<!-- Paginación -->
+<div class="pagination">
+  {{#if hasPrevPage}}
+    <a href="{{prevLink}}" class="btn btn-outline">← Anterior</a>
+  {{/if}}
+  <span>Página {{currentPage}} de {{totalPages}}</span>
+  {{#if hasNextPage}}
+    <a href="{{nextLink}}" class="btn btn-outline">Siguiente →</a>
+  {{/if}}
+</div>
