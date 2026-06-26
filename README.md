@@ -1,10 +1,10 @@
-# 🎌 AniZone — E-commerce de Anime & Manga
+# AniZone — E-commerce de Anime & Manga
 
 API REST + Vistas con Node.js, Express, MongoDB y WebSockets.
 
 ---
 
-## 🚀 Instalación
+## Instalación
 
 ```bash
 # 1. Clonar el repositorio
@@ -27,7 +27,7 @@ npm run dev
 
 ---
 
-## ⚙️ Variables de entorno (.env)
+## Variables de entorno (.env)
 
 ```
 PORT=8080
@@ -48,7 +48,7 @@ MONGO_URI=mongodb://localhost:27017/ecommerce
 
 ---
 
-## 📁 Estructura del proyecto
+## La estructura del proyecto
 
 ```
 anizone/
@@ -94,7 +94,7 @@ anizone/
 
 ---
 
-## 🌐 Endpoints API
+## Los endpoints API
 
 ### Productos `/api/products`
 
@@ -126,7 +126,7 @@ anizone/
 
 ---
 
-## 🖥️ Vistas
+## Vistas
 
 | URL | Vista |
 |-----|-------|
@@ -137,7 +137,7 @@ anizone/
 
 ---
 
-## ⚡ WebSockets
+## WebSockets
 
 La vista `/realtimeproducts` permite:
 - Ver todos los productos en tiempo real
